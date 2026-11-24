@@ -15,6 +15,23 @@
     trainer: name => `https://play.pokemonshowdown.com/sprites/trainers/${name}.png`,
     cry: id => `https://raw.githubusercontent.com/PokeAPI/cries/main/cries/pokemon/latest/${id}.ogg`,
   };
+  // Si una imagen de PokeAPI no carga (raw.githubusercontent corta cuando se piden muchas seguidas), se prueba
+  // el espejo de jsDelivr y, si también falla, se reintenta otra vez pasado un momento (hasta 3 intentos).
+  const MIRROR = 'https://cdn.jsdelivr.net/gh/PokeAPI/sprites@master/sprites';
+  document.addEventListener('error', ev => {
+    const el = ev.target;
+    if (!el || !el.getAttribute || (el.tagName !== 'IMG' && el.tagName !== 'image') || el.hasAttribute('onerror')) return;
+    const attr = el.tagName === 'IMG' ? 'src' : 'href';
+    const src = el.getAttribute(attr) || '';
+    const n = Number(el.getAttribute('data-retry') || 0);
+    if (n >= 3) return;
+    let next = null;
+    if (src.startsWith(RAW)) next = MIRROR + src.slice(RAW.length).split('?')[0];
+    else if (src.startsWith(MIRROR)) next = RAW + src.slice(MIRROR.length).split('?')[0] + '?r=' + (n + 1);
+    if (!next) return;
+    el.setAttribute('data-retry', n + 1);
+    setTimeout(() => el.setAttribute(attr, next), n ? 1200 * n : 0);
+  }, true);
 
   // ---------- Tipos ----------
   PK.TYPES = {

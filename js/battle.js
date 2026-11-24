@@ -73,6 +73,8 @@
     const diff = PK.DIFFICULTY[c.difficulty] || PK.DIFFICULTY.normal;
     const team = (o.team && o.team.length ? o.team : [c.active]).map(uid => L.mon(c, uid)).filter(Boolean);
     const foes = o.foe.team.map(f => ({ id: f.id, level: f.level, dmg: 0, amistad: 0, boost: f.boost }));
+    // Se precargan las imágenes de todos los rivales: así el segundo aparece al momento cuando sale.
+    foes.forEach(f => { const im = new Image(); im.src = PK.URL.art(f.id); });
     const wild = o.foe.kind === 'salvaje';
     let mi = Math.max(0, team.findIndex(p => hpOf(p) > 0));
     let fi = 0;

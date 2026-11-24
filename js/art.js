@@ -133,7 +133,8 @@
 
   // ---------- Imágenes oficiales ----------
   const name = id => PK.esc(PK.DEX[id] ? PK.DEX[id].n : '');
-  const mon = (id, cls = '', extra = '') => `<img class="mon-img ${cls}" src="${PK.URL.art(id)}" alt="${name(id)}" draggable="false" loading="lazy" ${extra}>`;
+  // Los Pokémon del escenario, del equipo y del combate se cargan ya (no en diferido): se ven nada más entrar.
+  const mon = (id, cls = '', extra = '') => `<img class="mon-img ${cls}" src="${PK.URL.art(id)}" alt="${name(id)}" draggable="false" loading="${/b-art|stage-art|tm-art|catch-mon/.test(cls) ? 'eager' : 'lazy'}" ${extra}>`;
   const anim = (id, back = false, cls = '') => `<img class="mon-anim ${cls}" src="${back ? PK.URL.back(id) : PK.URL.front(id)}" alt="${name(id)}" draggable="false" onerror="this.onerror=null;this.src='${PK.URL.art(id)}';this.classList.add('as-art')">`;
   // Entrenadores: dibujo oficial (Pokémon Masters EX y webs de los juegos).
   const trainer = (id, cls = '') => {
