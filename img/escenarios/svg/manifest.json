@@ -1,0 +1,194 @@
+[
+ {
+  "id": "johto-otono",
+  "place": "Bosque otoñal de Johto",
+  "region": "johto",
+  "t": "campo"
+ },
+ {
+  "id": "johto-atardecer",
+  "place": "Ruta otoñal al atardecer",
+  "region": "johto",
+  "t": "campo"
+ },
+ {
+  "id": "johto-santuario",
+  "place": "Santuario de Johto",
+  "region": "johto",
+  "t": "campo"
+ },
+ {
+  "id": "johto-lago",
+  "place": "Lago de Johto",
+  "region": "johto",
+  "t": "campo"
+ },
+ {
+  "id": "johto-noche",
+  "place": "Bosque de Johto de noche",
+  "region": "johto",
+  "t": "campo"
+ },
+ {
+  "id": "hoenn-volcan",
+  "place": "Islas volcánicas de Hoenn",
+  "region": "hoenn",
+  "t": "playa"
+ },
+ {
+  "id": "hoenn-playa",
+  "place": "Playa de Hoenn",
+  "region": "hoenn",
+  "t": "playa"
+ },
+ {
+  "id": "hoenn-selva",
+  "place": "Selva de Hoenn",
+  "region": "hoenn",
+  "t": "campo"
+ },
+ {
+  "id": "hoenn-atardecer",
+  "place": "Mar de Hoenn al atardecer",
+  "region": "hoenn",
+  "t": "playa"
+ },
+ {
+  "id": "hoenn-faro",
+  "place": "Faro de la costa de Hoenn",
+  "region": "hoenn",
+  "t": "playa"
+ },
+ {
+  "id": "teselia-ciudad",
+  "place": "Ciudad de Teselia al anochecer",
+  "region": "teselia",
+  "t": "ciudad"
+ },
+ {
+  "id": "teselia-noche",
+  "place": "Bahía de Teselia de noche",
+  "region": "teselia",
+  "t": "ciudad"
+ },
+ {
+  "id": "teselia-desierto",
+  "place": "Desierto de Teselia",
+  "region": "teselia",
+  "t": "desierto"
+ },
+ {
+  "id": "teselia-molinos",
+  "place": "Praderas de Teselia",
+  "region": "teselia",
+  "t": "campo"
+ },
+ {
+  "id": "alola-playa",
+  "place": "Playa de Alola",
+  "region": "alola",
+  "t": "playa"
+ },
+ {
+  "id": "alola-volcan",
+  "place": "Volcán de Alola",
+  "region": "alola",
+  "t": "campo"
+ },
+ {
+  "id": "alola-cascada",
+  "place": "Cascada de la selva de Alola",
+  "region": "alola",
+  "t": "campo"
+ },
+ {
+  "id": "alola-atardecer",
+  "place": "Isla de Alola al atardecer",
+  "region": "alola",
+  "t": "playa"
+ },
+ {
+  "id": "sinnoh-nieve",
+  "place": "Montañas nevadas de Sinnoh",
+  "region": "sinnoh",
+  "t": "nieve"
+ },
+ {
+  "id": "sinnoh-lago",
+  "place": "Lago helado de Sinnoh",
+  "region": "sinnoh",
+  "t": "nieve"
+ },
+ {
+  "id": "sinnoh-noche",
+  "place": "Bosque nevado de noche",
+  "region": "sinnoh",
+  "t": "nieve"
+ },
+ {
+  "id": "sinnoh-monte",
+  "place": "Monte de Sinnoh al atardecer",
+  "region": "sinnoh",
+  "t": "campo"
+ },
+ {
+  "id": "kalos-jardines",
+  "place": "Jardines de Kalos",
+  "region": "kalos",
+  "t": "campo"
+ },
+ {
+  "id": "kalos-flores",
+  "place": "Campos de flores de Kalos",
+  "region": "kalos",
+  "t": "campo"
+ },
+ {
+  "id": "paldea-canon",
+  "place": "Cañón de Paldea",
+  "region": "paldea",
+  "t": "desierto"
+ },
+ {
+  "id": "paldea-colinas",
+  "place": "Colinas de Paldea",
+  "region": "paldea",
+  "t": "campo"
+ },
+ {
+  "id": "kanto-pradera",
+  "place": "Pradera de Kanto",
+  "region": "kanto",
+  "t": "campo"
+ },
+ {
+  "id": "kanto-bosque",
+  "place": "Bosque de Kanto",
+  "region": "kanto",
+  "t": "campo"
+ },
+ {
+  "id": "kanto-lago",
+  "place": "Lago de Kanto al amanecer",
+  "region": "kanto",
+  "t": "campo"
+ },
+ {
+  "id": "kanto-noche",
+  "place": "Pradera de Kanto de noche",
+  "region": "kanto",
+  "t": "campo"
+ },
+ {
+  "id": "galar-niebla",
+  "place": "Colinas de Galar con niebla",
+  "region": "galar",
+  "t": "campo"
+ },
+ {
+  "id": "galar-molinos",
+  "place": "Campos de Galar",
+  "region": "galar",
+  "t": "campo"
+ }
+]

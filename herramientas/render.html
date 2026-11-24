@@ -1,0 +1,81 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Pintor de escenarios</title>
+<style>
+  :root { color-scheme: dark; }
+  body { margin: 0; background: #111; color: #eee; font: 15px/1.4 system-ui, sans-serif; }
+  header { padding: 10px 16px; display: flex; gap: 14px; align-items: center; flex-wrap: wrap; }
+  a { color: #9cf; }
+  .grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(min(420px, 100%), 1fr)); gap: 12px; padding: 12px; }
+  figure { margin: 0; background: #1c1c1c; border-radius: 8px; overflow: hidden; }
+  figure img { display: block; width: 100%; aspect-ratio: 16 / 9; object-fit: cover; background: #222; }
+  figcaption { padding: 6px 10px; font-size: 13px; display: flex; justify-content: space-between; gap: 8px; }
+  .full { position: fixed; inset: 0; background: #000; }
+  .full img { width: 100vw; height: 100vh; object-fit: contain; display: block; }
+  .full .tag { position: fixed; left: 10px; top: 10px; background: rgba(0, 0, 0, .6); padding: 4px 10px; border-radius: 6px; }
+  #log { padding: 12px 16px; white-space: pre-wrap; font-family: ui-monospace, monospace; }
+</style>
+</head>
+<body>
+<script>
+// ?            galería de los SVG pintados
+// ?ver=ID      un escenario a pantalla completa (SVG)
+// ?jpg=ID      el JPG ya guardado
+// ?guardar     pasa todos a JPG (o ?guardar=id1,id2) y los envía a guardar_render.py
+const SVG = '../img/escenarios/svg/';
+const JPG = '../img/escenarios/';
+const CALIDAD = 0.86;
+const q = new URLSearchParams(location.search);
+const el = (html) => { document.body.insertAdjacentHTML('beforeend', html); };
+
+async function manifest() {
+  const r = await fetch(SVG + 'manifest.json?t=' + Date.now());
+  return r.json();
+}
+
+async function pinta(id) {
+  const img = new Image();
+  img.src = SVG + id + '.svg?t=' + Date.now();
+  await img.decode();
+  const c = document.createElement('canvas');
+  c.width = 1920; c.height = 1080;
+  c.getContext('2d').drawImage(img, 0, 0, 1920, 1080);
+  const blob = await new Promise((ok) => c.toBlob(ok, 'image/jpeg', CALIDAD));
+  const r = await fetch('/guardar?nombre=' + encodeURIComponent(id) + '.jpg', { method: 'POST', body: blob });
+  return r.ok ? r.text() : 'ERROR ' + r.status + ' en ' + id;
+}
+
+(async () => {
+  if (q.has('ver') || q.has('jpg')) {
+    const id = q.get('ver') || q.get('jpg');
+    const src = q.has('ver') ? SVG + id + '.svg?t=' + Date.now() : JPG + id + '.jpg?t=' + Date.now();
+    el(`<div class="full"><img src="${src}" alt=""><span class="tag">${id}</span></div>`);
+    return;
+  }
+  const lista = await manifest();
+  if (q.has('guardar')) {
+    const solo = (q.get('guardar') || '').split(',').filter(Boolean);
+    el('<pre id="log">Pasando a JPG…\n</pre>');
+    const log = document.getElementById('log');
+    let ok = 0;
+    for (const e of lista) {
+      if (solo.length && !solo.includes(e.id)) continue;
+      try { const t = await pinta(e.id); log.textContent += t + '\n'; if (!t.startsWith('ERROR')) ok++; }
+      catch (err) { log.textContent += 'ERROR ' + e.id + ': ' + err + '\n'; }
+    }
+    log.textContent += `HECHO: ${ok} guardados\n`;
+    document.title = 'HECHO ' + ok;
+    return;
+  }
+  el(`<header><b>${lista.length} escenarios</b><a href="?guardar">Pasar todos a JPG</a></header><div class="grid" id="g"></div>`);
+  const g = document.getElementById('g');
+  for (const e of lista) {
+    g.insertAdjacentHTML('beforeend', `<figure><a href="?ver=${e.id}"><img loading="lazy" src="${SVG + e.id}.svg" alt=""></a><figcaption><span>${e.place}</span><span>${e.region}</span></figcaption></figure>`);
+  }
+})();
+</script>
+</body>
+</html>

@@ -1,0 +1,167 @@
+/* Pokemonyx · versión 2: imágenes oficiales, escenario interactivo, captura y combate reordenado */
+
+/* Entrenadores con dibujo oficial */
+.trainer-art { display: block; height: 120px; width: auto; max-width: 100%; object-fit: contain; filter: drop-shadow(0 4px 0 rgba(31, 42, 68, .25)); user-select: none; -webkit-user-drag: none; }
+.trainer-art.none { display: grid; place-items: center; font-size: 3rem; }
+.pf-trainer { position: absolute; left: -6px; bottom: -4px; height: 96px; }
+.w-oak { height: 170px; }
+.oak { height: 150px; flex-shrink: 0; }
+.av .trainer-art { height: 128px; width: 100%; }
+.stage-trainer .trainer-art { height: min(34vh, 250px); }
+.kc-trainer { height: 40px; width: 40px; object-fit: cover; object-position: 50% 0; border-radius: 50%; background: var(--soft); filter: none; }
+.cel-trainer { height: 200px; }
+.cl-sprite { height: 170px; }
+.rd-sprite { height: 96px; }
+.ps-trainer { height: 160px; }
+.kc-art .trainer-art { height: 92px; }
+.vs-side .trainer-art { height: min(46vh, 330px); filter: drop-shadow(0 8px 0 rgba(0, 0, 0, .35)); }
+.b-trainer .trainer-art { height: min(36vh, 260px); }
+.cl-team { display: flex; gap: 2px; }
+.cl-mon { width: 46px; height: 46px; }
+
+/* Fondo con imagen oficial, clima y hora */
+.photo-scene { position: absolute; inset: 0; overflow: hidden; background: #9fd3ff; }
+.photo-scene .ps-fallback { position: absolute; inset: 0; }
+.photo-scene .ps-img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; object-position: 50% var(--y, 40%); transform: scale(var(--z, 1)); transform-origin: 50% 0; }
+.photo-scene .ps-light, .photo-scene .ps-weather { position: absolute; inset: 0; pointer-events: none; }
+.w-nubes .ps-light { background: rgba(120, 130, 150, .22); }
+.w-lluvia .ps-light { background: linear-gradient(rgba(40, 55, 85, .38), rgba(40, 55, 85, .18)); }
+.w-atardecer .ps-light { background: linear-gradient(rgba(255, 120, 60, .28), rgba(255, 190, 90, .12) 60%, rgba(80, 40, 90, .18)); mix-blend-mode: multiply; }
+.w-niebla .ps-light { background: linear-gradient(rgba(255, 255, 255, .15), rgba(255, 255, 255, .55)); }
+.w-nieve .ps-light { background: rgba(200, 225, 255, .25); }
+.is-night .ps-light { background: linear-gradient(rgba(10, 20, 60, .55), rgba(20, 30, 80, .4)); }
+.ps-weather .drop { position: absolute; top: -10%; width: 2px; height: 18px; background: rgba(220, 235, 255, .8); border-radius: 2px; animation: rainfall linear infinite; }
+.ps-weather .flake { position: absolute; top: -8%; color: #fff; font-size: 16px; text-shadow: 0 0 3px rgba(0, 0, 0, .25); animation: snowfall linear infinite; }
+@keyframes rainfall { to { transform: translate(-30px, 120vh); } }
+@keyframes snowfall { 50% { transform: translate(20px, 55vh) rotate(180deg); } to { transform: translate(-10px, 115vh) rotate(360deg); } }
+.scene-tag { position: absolute !important; left: 10px; top: 10px; z-index: 3; background: rgba(255, 255, 255, .92); border: 3px solid #1f2a44; border-radius: 999px; padding: 4px 12px; font-weight: 600; font-size: .9rem; max-width: calc(100% - 20px); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+
+/* Rarezas: zonas que se tocan sobre el dibujo (mismo encuadre que el fondo: xMidYMid slice = object-fit cover) */
+.stage > svg.odd-layer { position: absolute; inset: 0; width: 100%; height: 100%; z-index: 1; pointer-events: none; }
+.odd-layer .odd { fill: transparent; pointer-events: all; cursor: pointer; }
+.odd-layer .odd.found { fill: transparent; stroke: none; pointer-events: none; }
+.odd-layer .odd.hint { fill: rgba(255, 255, 255, .14); stroke: #fff; stroke-width: 10; animation: oddhint .8s ease-in-out 4; }
+@keyframes oddhint { 50% { stroke-width: 24; } }
+.odd-hint { border: 0; background: #ffd23f; border-radius: 999px; padding: 0 6px; font-size: .85rem; cursor: pointer; margin-left: 2px; line-height: 1.4; }
+.odd-hint:disabled { opacity: .4; cursor: default; }
+
+/* Escondites */
+.spots { position: absolute !important; inset: 0; z-index: 2; pointer-events: none; }
+.spot { position: absolute; width: 104px; height: 104px; padding: 0; border: 0; background: none; transform: translate(-50%, -88%) scale(var(--s, 1)); transform-origin: 50% 100%; pointer-events: auto; cursor: pointer; filter: drop-shadow(0 5px 0 rgba(0, 0, 0, .22)); transition: filter .2s; touch-action: manipulation; }
+.spot:not(.opened) { animation: spotidle 3.2s ease-in-out infinite; }
+.spot:not(.opened):hover { filter: drop-shadow(0 0 10px #fff6a0) drop-shadow(0 5px 0 rgba(0, 0, 0, .22)); }
+.spot-svg { width: 100%; height: 100%; display: block; }
+.spot.opened .spot-svg { opacity: .55; filter: saturate(.6); }
+.spot.rustle { animation: rustle .16s linear 4; }
+.spot-mark { position: absolute; left: 50%; top: -12%; transform: translateX(-50%); font-size: 2rem; display: grid; place-items: center; }
+.spot-mark .item-img { width: 46px; height: 46px; filter: drop-shadow(0 2px 0 #fff); }
+.spot-mark.wild .mon-img { width: 86px; height: 86px; animation: idle 2s ease-in-out infinite; }
+.spot-mark.wild b { position: absolute; top: -6px; right: -10px; background: #e3350d; color: #fff; border: 3px solid #1f2a44; border-radius: 50%; width: 30px; height: 30px; display: grid; place-items: center; font-size: 1.1rem; }
+.spot.waiting { animation: spotpulse 1.2s ease-in-out infinite; }
+@keyframes spotpulse { 50% { transform: translate(-50%, -88%) scale(calc(var(--s, 1) * 1.08)); } }
+@keyframes spotidle { 0%, 88%, 100% { transform: translate(-50%, -88%) scale(var(--s, 1)) rotate(0); } 92% { transform: translate(-50%, -88%) scale(var(--s, 1)) rotate(-4deg); } 96% { transform: translate(-50%, -88%) scale(var(--s, 1)) rotate(4deg); } }
+@keyframes rustle { 25% { transform: translate(-52%, -88%) scale(var(--s, 1)) rotate(-6deg); } 75% { transform: translate(-48%, -88%) scale(var(--s, 1)) rotate(6deg); } }
+.stage { justify-content: flex-start; padding-left: 2%; }
+.stage-art { width: min(30vh, 28vw, 240px); }
+.stage-mon { margin-left: -2%; }
+
+/* Captura */
+.modal-back.catch-modal .modal-card { width: min(560px, 100%); background: radial-gradient(circle at 50% 30%, #fff 0 35%, #d9f0ff 70%, #bfe3ff); }
+.catch { text-align: center; }
+.catch h2 { font-family: var(--title); letter-spacing: .03em; font-size: 2rem; margin: 6px 0; }
+.catch h2 small { font-family: var(--font); font-size: 1rem; color: var(--muted); }
+.catch-stage { position: relative; height: 230px; display: grid; place-items: center; }
+.catch-mon { width: 210px; height: 210px; animation: idle 2.4s ease-in-out infinite; }
+.catch-ball { position: absolute; left: 50%; top: 50%; width: 64px; height: 64px; image-rendering: pixelated; margin-top: -32px; }
+.catch-ball.wobble { animation: wobble .6s ease-in-out; }
+.catch-ball.caught { filter: drop-shadow(0 0 12px #ffcb05); }
+@keyframes wobble { 0%, 100% { rotate: 0deg; } 25% { rotate: -22deg; } 75% { rotate: 22deg; } }
+.catch-msg { font-size: 1.1rem; min-height: 2.6em; }
+.ball-row { display: flex; gap: 10px; justify-content: center; flex-wrap: wrap; }
+.ball-btn { border: 3px solid #1f2a44; border-radius: 18px; background: #fff; padding: 6px 14px; display: flex; flex-direction: column; align-items: center; box-shadow: 0 4px 0 #1f2a44; min-width: 110px; }
+.ball-btn:active { transform: translateY(3px); box-shadow: 0 1px 0 #1f2a44; }
+.ball-btn small { color: var(--muted); }
+
+/* Combate: la información va junto a cada Pokémon */
+.b-side-foe, .b-side-me { position: absolute; display: flex; flex-direction: column; align-items: center; gap: 4px; z-index: 2; }
+.b-side-foe { right: 3%; top: 3%; width: min(430px, 46%); }
+.b-side-me { left: 3%; bottom: calc(var(--ph) + 1%); width: min(430px, 46%); justify-content: flex-end; }
+.b-side-foe .b-spot, .b-side-me .b-spot { position: relative; inset: auto; left: auto; right: auto; top: auto; bottom: auto; width: 100%; flex: 0 0 auto; }
+.b-side-foe .b-spot { height: 30vh; }
+.b-side-me .b-spot { height: 34vh; }
+.b-art { height: 100%; width: auto; max-width: 100%; object-fit: contain; filter: drop-shadow(0 6px 0 rgba(0, 0, 0, .3)); animation: idle 2.8s ease-in-out infinite; transform-origin: 50% 100%; }
+.b-art.me { scale: -1 1; }
+.b-side-foe .b-hud, .b-side-me .b-hud { position: relative; left: auto; right: auto; top: auto; bottom: auto; width: 100%; }
+.b-hud .hud-hp { text-align: right; }
+.foe-moves { display: flex; flex-wrap: wrap; gap: 4px; margin-top: 6px; }
+.foe-moves small { width: 100%; color: var(--muted); font-weight: 600; font-size: .78rem; }
+.fm { background: color-mix(in srgb, var(--tc) 25%, #fff); border: 2px solid var(--tc); border-radius: 999px; padding: 1px 8px; font-size: .78rem; font-weight: 600; }
+.fm b { color: #c12f3e; }
+.b-turn { position: absolute; left: 50%; top: 10px; transform: translateX(-50%); z-index: 4; background: #ffcb05; border: 3px solid #1f2a44; border-radius: 999px; padding: 3px 16px; font-family: var(--title); font-size: 1.3rem; letter-spacing: .05em; }
+.b-side { align-items: stretch; }
+.b-team { display: flex; gap: 6px; justify-content: center; }
+.bt { position: relative; width: 52px; height: 52px; border-radius: 50%; border: 3px solid #fff; background: rgba(255, 255, 255, .9); padding: 2px; overflow: hidden; }
+.bt.on { border-color: #ffcb05; box-shadow: 0 0 0 3px #e3350d; }
+.bt.ko { filter: grayscale(1); opacity: .5; }
+.bt:not(:disabled):hover { transform: scale(1.08); }
+.bt .mon-img { width: 100%; height: 100%; }
+.bt i { position: absolute; left: 0; bottom: 0; height: 5px; background: #3fd16a; }
+.b-move small { white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+
+/* Medallas del año */
+.medal { position: relative; }
+.medal.now { box-shadow: 0 0 0 4px #e3350d; filter: none; opacity: 1; }
+.md-n { position: absolute; top: 4px; left: 6px; font-weight: 700; font-size: .8rem; color: var(--muted); }
+.md-char { height: 70px; }
+
+/* Team Rocket: Jessie, James y Meowth */
+.rocket-trio { display: inline-flex; align-items: flex-end; gap: 4px; }
+.rt-face { width: 88px; height: 88px; border-radius: 50%; object-fit: cover; object-position: 50% 22%; border: 4px solid #fff; box-shadow: 0 4px 0 rgba(0, 0, 0, .35); background: #2b2142; }
+.rt-meowth { width: 82px; height: 82px; }
+.m-rocket .rocket-trio .rt-face { width: 78px; height: 78px; }
+.ro-rocket .rt-face { width: 96px; height: 96px; }
+
+@media (max-width: 700px) {
+  .spot { width: 82px; height: 82px; }
+  .b-side-foe, .b-side-me { width: 56%; }
+  .foe-moves .fm { font-size: .7rem; }
+  .stage-trainer .trainer-art { height: 30vh; }
+  .rt-face { width: 60px; height: 60px; }
+}
+
+/* Revisión de la dinámica (23/11): avisos de validación y metas de la semana */
+.warn-card { background: #fff4d6; border: 3px solid #e8b100; font-size: 1rem; }
+.warn-line { background: #fff4d6; border-radius: 12px; padding: 8px 12px; display: flex; gap: 8px; align-items: center; flex-wrap: wrap; }
+.week-goals { margin-top: 12px; padding: 10px 14px; border-radius: 14px; background: var(--soft, #f2f5fb); border: 2px dashed #c9d3e6; }
+.week-goals p { margin: 4px 0; }
+
+/* Escenario pintado: capa de escondites (23/11). Entre el dibujo y la capa va lo escondido; la capa es el mismo
+   dibujo recortado con la silueta de los árboles, arbustos, rocas, nubes… así lo de en medio queda detrás de ellos. */
+.photo-scene .ps-mid, .photo-scene .ps-capa { position: absolute; inset: 0; width: 100%; height: 100%; pointer-events: none; transform: scale(var(--z, 1)); transform-origin: 50% 0; }
+.photo-scene .ps-capa { background-repeat: no-repeat; background-size: cover; background-position: 50% var(--y, 40%); -webkit-mask-repeat: no-repeat; mask-repeat: no-repeat; -webkit-mask-size: cover; mask-size: cover; -webkit-mask-position: 50% var(--y, 40%); mask-position: 50% var(--y, 40%); }
+.ps-mid image, .esc-layer image { transform-box: fill-box; transform-origin: 50% 100%; }
+.ps-mid .peek, .esc-layer .peek { animation: peekbob 2.4s ease-in-out infinite; }
+.ps-mid .emerge, .esc-layer .emerge { animation: emerge .8s cubic-bezier(.3, 1.5, .5, 1) both; }
+.ps-mid .pop, .esc-layer .pop { animation: popup 1.4s ease-out forwards; }
+@keyframes peekbob { 50% { transform: translateY(-5%); } }
+@keyframes emerge { from { transform: translateY(75%); } }
+@keyframes popup { 0% { transform: translateY(70%); opacity: 1; } 45% { transform: translateY(-25%); opacity: 1; } 100% { transform: translateY(-60%); opacity: 0; } }
+.stage > svg.esc-layer { position: absolute; inset: 0; width: 100%; height: 100%; z-index: 1; pointer-events: none; }
+.esc-layer .esc-hit { fill: transparent; pointer-events: all; cursor: pointer; }
+.esc-layer .esc-ring { fill: none; stroke: #fff; stroke-width: 0; opacity: 0; pointer-events: none; }
+.esc-layer .esc.rustle .esc-ring { animation: escring .55s ease-out; }
+@keyframes escring { from { opacity: .9; stroke-width: 14; } to { opacity: 0; stroke-width: 2; } }
+.esc-layer .twinkle { fill: #fffbe0; transform-box: fill-box; transform-origin: center; animation: twinkle 1.9s ease-in-out infinite; pointer-events: none; filter: drop-shadow(0 0 4px #fff6a0); }
+.esc-layer .twinkle.t2 { animation-delay: .9s; }
+@keyframes twinkle { 0%, 100% { opacity: .1; transform: scale(.45) rotate(0); } 50% { opacity: 1; transform: scale(1.05) rotate(45deg); } }
+.esc-layer .bang { pointer-events: none; transform-box: fill-box; transform-origin: center; animation: peekbob 1s ease-in-out infinite; }
+.esc-layer .bang circle { fill: #e3350d; stroke: #1f2a44; }
+.esc-layer .bang text { fill: #fff; font-weight: 800; font-family: system-ui, sans-serif; }
+
+/* Metas de la tienda: huevo misterioso y premios de casa */
+.shop-item.goal { border: 3px solid #ffcb05; }
+.goal-ico { font-size: 3rem; line-height: 1.2; }
+.goal-bar { width: 100%; height: 10px; border-radius: 999px; background: #e6e8ef; overflow: hidden; margin: 4px 0 2px; }
+.goal-bar i { display: block; height: 100%; background: linear-gradient(90deg, #ffcb05, #ff8a1f); }
+.home-row { display: flex; align-items: center; gap: 10px; padding: 6px 0; border-bottom: 1px solid #eef0f5; }
+.home-row .grow { flex: 1; }
